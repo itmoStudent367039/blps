@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mydatabase
+    username: myuser
+    password: secret
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      pool-name: HikariCP
+      maximum-pool-size: 10
+server:
+  port: 8080
+  servlet:
+    context-path: /monolith

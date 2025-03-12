@@ -1,0 +1,5 @@
+id,tariff_name,price,number_id
+1,Basic,50.0,1
+2,Standard,70.0,1
+3,Deluxe,100.0,2
+4,Premium,150.0,3
