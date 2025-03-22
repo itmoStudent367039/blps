@@ -1,4 +1,15 @@
 services:
+  nginx:
+    image: nginx:stable-alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf.prod:/etc/nginx/conf.d/nginx.conf
+    depends_on:
+      - monolith
+      - payment
+    networks:
+      - app-network
   postgres:
     image: 'postgres:latest'
     environment:
@@ -7,3 +18,54 @@ services:
       - 'POSTGRES_USER=myuser'
     ports:
       - '5432'
+    networks:
+      - app-network
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - app-network
+
+  monolith:
+    build:
+      context: ./monolith
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+      - rabbitmq
+      - payment
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/mydatabase
+      SPRING_DATASOURCE_USERNAME: myuser
+      SPRING_DATASOURCE_PASSWORD: secret
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+    ports:
+      - '8080:8080'
+    networks:
+      - app-network
+
+  payment:
+    build:
+      context: ./payment
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+      - rabbitmq
+    environment:
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+    ports:
+      - '8081:8081'
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

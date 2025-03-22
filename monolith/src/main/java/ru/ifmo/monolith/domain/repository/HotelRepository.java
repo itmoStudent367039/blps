@@ -23,7 +23,6 @@ public interface HotelRepository extends JpaRepository<Hotel, Integer> {
             "LIMIT 5")
     List<HotelDto> findAllByNameIsLike(@Param("name") String name);
 
-
     @Query("""
                 SELECT h FROM Hotel h
                 JOIN FETCH h.city c

@@ -1,3 +1,4 @@
 rootProject.name = 'blps'
 include 'monolith'
 include 'payment'
+include 'common'

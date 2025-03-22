@@ -1,8 +1,13 @@
 spring:
+  rabbitmq:
+    host: ${SPRING_RABBITMQ_HOST:localhost}
+    port: ${SPRING_RABBITMQ_PORT:5672}
+    username: guest
+    password: guest
   datasource:
-    url: jdbc:postgresql://localhost:5432/mydatabase
-    username: myuser
-    password: secret
+    url: ${SPRING_DATASOURCE_URL:"jdbc:postgresql://localhost:5432/mydatabase"}
+    username: ${SPRING_DATASOURCE_USERNAME:myuser}
+    password: ${SPRING_DATASOURCE_PASSWORD:secret}
     driver-class-name: org.postgresql.Driver
     hikari:
       pool-name: HikariCP
@@ -11,3 +16,13 @@ server:
   port: 8080
   servlet:
     context-path: /monolith
+
+rabbitmq:
+  exchange: payment-exchange
+  successRoutingKey: payment.success
+  failureRoutingKey: payment.failure
+  successQueue: payment-success-queue
+  failureQueue: payment-failure-queue
+
+payment:
+  url: http://payment:8081/payment/api

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.ifmo.monolith.booking.Booking;
 
 import java.util.List;
 
@@ -35,4 +36,7 @@ public class Number {
 
     @OneToMany(mappedBy = "number")
     private List<Tariff> tariffs;
+
+    @OneToMany(mappedBy = "room")
+    private List<Booking> bookings;
 }
