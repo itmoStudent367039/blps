@@ -1,0 +1,137 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2-dml-cities
+      author: yestai
+      changes:
+        - loadData:
+            file: data/cities.csv
+            separator: ","
+            tableName: city
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+              - column:
+                  name: name
+                  type: varchar(255)
+
+  - changeSet:
+      id: 2-dml-hotels
+      author: yestai
+      changes:
+        - loadData:
+            file: data/hotels.csv
+            separator: ","
+            tableName: hotel
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+              - column:
+                  name: city_id
+                  type: int
+              - column:
+                  name: rating
+                  type: int
+              - column:
+                  name: distance_from_center
+                  type: double
+
+  - changeSet:
+      id: 3-dml-numbers
+      author: yestai
+      changes:
+        - loadData:
+            file: data/numbers.csv
+            separator: ","
+            tableName: number
+            columns:
+              - column:
+                  name: id
+                  type: int
+              - column:
+                  name: number_of_rooms
+                  type: int
+              - column:
+                  name: max_occupancy
+                  type: int
+              - column:
+                  name: number_of_single_beds
+                  type: int
+              - column:
+                  name: number_of_pair_beds
+                  type: int
+              - column:
+                  name: name
+                  type: varchar(255)
+              - column:
+                  name: hotel_id
+                  type: int
+
+  - changeSet:
+      id: 3-dml-tariffs
+      author: yestai
+      changes:
+        - loadData:
+            file: data/tariffs.csv
+            separator: ","
+            tableName: tariff
+            columns:
+              - column:
+                  name: id
+                  type: int
+              - column:
+                  name: tariff_name
+                  type: varchar(255)
+              - column:
+                  name: price
+                  type: double
+              - column:
+                  name: number_id
+                  type: int
+
+  - changeSet:
+      id: 3-dml-tariffs-options
+      author: yestai
+      changes:
+        - loadData:
+            file: data/tariffs-options.csv
+            separator: ","
+            tableName: tariff_option
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+              - column:
+                  name: option_name
+                  type: varchar(255)
+
+  - changeSet:
+      id: 4-dml-tariff-options-include-exclude
+      author: yourname
+      changes:
+        - loadData:
+            file: data/tariff_include_options.csv
+            separator: ","
+            tableName: tariff_include_option
+            columns:
+              - column:
+                  name: tariff_id
+                  type: int
+              - column:
+                  name: option_id
+                  type: int
+
+        - loadData:
+            file: data/tariff_exclude_options.csv
+            separator: ","
+            tableName: tariff_exclude_option
+            columns:
+              - column:
+                  name: tariff_id
+                  type: int
+              - column:
+                  name: option_id
+                  type: int
