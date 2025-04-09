@@ -1,0 +1,13 @@
+payment:
+  url: ${wiremock.server.baseUrl:"http://payment:8081/"}/payment/api
+
+rabbitmq:
+  exchange: payment-exchange
+  successRoutingKey: payment.success
+  failureRoutingKey: payment.failure
+  successQueue: payment-success-queue
+  failureQueue: payment-failure-queue
+
+spring:
+  profiles:
+    active: test

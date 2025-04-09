@@ -1,13 +1,13 @@
 package ru.ifmo.monolith.domain.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.ifmo.monolith.booking.Booking;
-
-import java.util.List;
 
 @Entity
 @Data
@@ -30,13 +30,5 @@ public class Number {
 
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "hotel_id")
-    private Hotel hotel;
-
-    @OneToMany(mappedBy = "number")
-    private List<Tariff> tariffs;
-
-    @OneToMany(mappedBy = "room")
-    private List<Booking> bookings;
+    private Integer hotelId;
 }

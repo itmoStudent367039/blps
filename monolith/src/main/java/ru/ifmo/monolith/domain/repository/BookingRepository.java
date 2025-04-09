@@ -8,19 +8,17 @@ import ru.ifmo.monolith.booking.Booking;
 import ru.ifmo.monolith.dto.BookingRequestDto;
 
 @Repository
+// todo: jpa specification
 public interface BookingRepository extends JpaRepository<Booking, Integer> {
 
     @Query("""
             SELECT COUNT(b) = 0 FROM Booking b
-            JOIN b.room r
-            JOIN r.hotel h
-            JOIN b.tariff t
-            WHERE h.name = :#{#request.bookingInfo.hotelName}
-            AND r.name = :#{#request.bookingInfo.hotelNumberName}
-            AND t.tariffName = :#{#request.bookingInfo.tariffName}
-            AND b.status IN ('CONFIRMED', 'PENDING')
-            AND b.startDate < :#{#request.bookingInfo.endBookingDate}
-            AND b.endDate > :#{#request.bookingInfo.startBookingDate}
+            WHERE b.hotelName = :#{#request.bookingInfo.hotelName}
+              AND b.hotelNumberName = :#{#request.bookingInfo.hotelNumberName}
+              AND b.tariffName = :#{#request.bookingInfo.tariffName}
+              AND b.status IN ('CONFIRMED', 'PENDING')
+              AND b.startDate < :#{#request.bookingInfo.endBookingDate}
+              AND b.endDate > :#{#request.bookingInfo.startBookingDate}
             """)
     Boolean isRoomAvailable(@Param("request") BookingRequestDto requestDto);
 }

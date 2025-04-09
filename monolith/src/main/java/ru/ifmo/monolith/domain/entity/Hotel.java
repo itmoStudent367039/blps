@@ -20,12 +20,7 @@ public class Hotel {
 
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "city_id")
-    private City city;
-
-    @OneToMany(mappedBy = "hotel")
-    private List<Number> numbers;
+    private Integer cityId;
 
     private Double distanceFromCenter;
 }

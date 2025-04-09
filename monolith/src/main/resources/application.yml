@@ -5,7 +5,7 @@ spring:
     username: guest
     password: guest
   datasource:
-    url: ${SPRING_DATASOURCE_URL:"jdbc:postgresql://localhost:5432/mydatabase"}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5430/mydatabase}
     username: ${SPRING_DATASOURCE_USERNAME:myuser}
     password: ${SPRING_DATASOURCE_PASSWORD:secret}
     driver-class-name: org.postgresql.Driver
@@ -25,4 +25,4 @@ rabbitmq:
   failureQueue: payment-failure-queue
 
 payment:
-  url: http://payment:8081/payment/api
+  url: http://api-gateway:8082/payment/api

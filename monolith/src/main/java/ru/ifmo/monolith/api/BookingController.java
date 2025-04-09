@@ -15,6 +15,7 @@ import ru.ifmo.monolith.dto.BookingResponseDto;
 import ru.ifmo.monolith.service.BookingService;
 
 import static org.springframework.http.ResponseEntity.ok;
+import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 import static ru.ifmo.monolith.api.constant.ApiUri.BOOKING_URI;
 
 @RestController
@@ -24,7 +25,7 @@ public class BookingController {
 
     private final BookingService bookingService;
 
-    @PostMapping
+    @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<BookingResponseDto> resolveBooking(
             @RequestBody @Valid BookingRequestDto requestDto) {
         return ok(bookingService.resolveBooking(requestDto));

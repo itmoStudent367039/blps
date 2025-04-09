@@ -24,6 +24,8 @@ import static java.time.temporal.ChronoUnit.DAYS;
 public class HotelsService {
 
     private final HotelRepository hotelRepository;
+    private final NumbersService numbersService;
+    private final TariffsService tariffsService;
 
     public List<HotelDto> getAllByNameIsLike(String destinationName) {
         return hotelRepository.findAllByNameIsLike(destinationName);
@@ -39,7 +41,7 @@ public class HotelsService {
     }
 
     private GetHotelsResponse toModel(Hotel hotel, GetHotelsRequest request) {
-        var availableNumbers = hotel.getNumbers()
+        var availableNumber = numbersService.findAllByHotelId(hotel.getId())
                 .stream()
                 .filter(number -> number.getMaxOccupancy() >= request.getGuestsCount())
                 .findFirst()
@@ -50,7 +52,7 @@ public class HotelsService {
                         ),
                         HttpStatus.CONFLICT
                 ));
-        var cheapestTariff = availableNumbers.getTariffs()
+        var cheapestTariff = tariffsService.findAllByNumberId(availableNumber.getId())
                 .stream()
                 .min(Comparator.comparingDouble(Tariff::getPrice))
                 .orElseThrow(() -> new MonolithException(

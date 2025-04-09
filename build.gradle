@@ -1,6 +1,7 @@
 buildscript {
     ext {
         springBootVersion = '3.2.1'
+        springCloudVersion = '2023.0.2'
     }
     repositories {
         mavenCentral()
@@ -19,6 +20,7 @@ plugins {
 allprojects {
     group = 'ru.ifmo'
     version = '1.0-SNAPSHOT'
+
 }
 
 subprojects {
@@ -34,5 +36,11 @@ subprojects {
 
     tasks.named('test') {
         useJUnitPlatform()
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        }
     }
 }

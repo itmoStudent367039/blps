@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5431/db}
+    username: ${SPRING_DATASOURCE_USERNAME:user}
+    password: ${SPRING_DATASOURCE_PASSWORD:user}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      pool-name: HikariCP
+      maximum-pool-size: 10
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: monolith
+          uri: http://localhost:8080
+          predicates:
+            - Path=/monolith/api/**
+        - id: payment
+          uri: http://localhost:8081
+          predicates:
+            - Path=/payment/api/**
+server:
+  port: 8082

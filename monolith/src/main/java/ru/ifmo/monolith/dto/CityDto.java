@@ -10,5 +10,5 @@ import lombok.Data;
 public class CityDto {
 
     private String name;
-    private Long hotelsCount;
+    private Integer hotelsCount;
 }

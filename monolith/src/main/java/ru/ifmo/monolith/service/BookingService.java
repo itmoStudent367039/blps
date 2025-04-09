@@ -1,14 +1,12 @@
 package ru.ifmo.monolith.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Transactional;
 import ru.ifmo.common.dto.PaymentRequest;
 import ru.ifmo.common.dto.PaymentResponse;
 import ru.ifmo.monolith.booking.Booking;
 import ru.ifmo.monolith.booking.BookingStatus;
-import ru.ifmo.monolith.domain.entity.Tariff;
 import ru.ifmo.monolith.domain.repository.BookingRepository;
 import ru.ifmo.monolith.dto.BookingRequestDto;
 import ru.ifmo.monolith.dto.BookingResponseDto;
@@ -27,12 +25,12 @@ public class BookingService {
     private final TariffsService tariffsService;
     private final PaymentService paymentService;
 
-    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Transactional
     public BookingResponseDto resolveBooking(BookingRequestDto requestDto) {
         var bookingInfo = requestDto.getBookingInfo();
-        var tariffByNames = getTariffByNames(bookingInfo);
+        throwIfNotExists(bookingInfo);
         var isRoomAvailable = bookingRepository.isRoomAvailable(requestDto);
-        var id = createBookingAndReturnId(requestDto, bookingInfo, tariffByNames);
+        var id = createBookingAndReturnId(requestDto, bookingInfo);
         if (!isRoomAvailable) {
             throw new MonolithException("Room is already booked for the selected dates", CONFLICT);
         }
@@ -78,17 +76,18 @@ public class BookingService {
                 .build();
     }
 
-    private Tariff getTariffByNames(BookingRequestDto.BookingInfoDto bookingInfo) {
-        return tariffsService.findByNames(
-                        bookingInfo.getHotelName(),
-                        bookingInfo.getHotelNumberName(),
-                        bookingInfo.getTariffName())
-                .orElseThrow(() -> new MonolithException("Tariff wasn't found", NOT_FOUND));
+    private void throwIfNotExists(BookingRequestDto.BookingInfoDto bookingInfo) {
+        var tariff = tariffsService.findByNames(
+                bookingInfo.getHotelName(),
+                bookingInfo.getHotelNumberName(),
+                bookingInfo.getTariffName());
+        if (tariff.isEmpty()) {
+            throw new MonolithException("Number wasn't found", NOT_FOUND);
+        }
     }
 
     private Integer createBookingAndReturnId(BookingRequestDto requestDto,
-                                             BookingRequestDto.BookingInfoDto bookingInfo,
-                                             Tariff tariffByNames) {
+                                             BookingRequestDto.BookingInfoDto bookingInfo) {
         var booking = Booking.builder()
                 .startDate(bookingInfo.getStartBookingDate())
                 .endDate(bookingInfo.getEndBookingDate())
@@ -96,9 +95,10 @@ public class BookingService {
                 .firstName(requestDto.getFirstName())
                 .lastName(requestDto.getLastName())
                 .email(requestDto.getEmail())
-                .tariff(tariffByNames)
+                .tariffName(bookingInfo.getTariffName())
+                .hotelName(bookingInfo.getHotelName())
                 .status(PENDING)
-                .room(tariffByNames.getNumber())
+                .hotelNumberName(bookingInfo.getHotelNumberName())
                 .build();
         return bookingRepository.save(booking).getId();
     }

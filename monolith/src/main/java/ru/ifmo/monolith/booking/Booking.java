@@ -1,12 +1,16 @@
 package ru.ifmo.monolith.booking;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.ifmo.monolith.domain.entity.Number;
-import ru.ifmo.monolith.domain.entity.Tariff;
 
 import java.time.LocalDate;
 
@@ -34,13 +38,11 @@ public class Booking {
 
     private String email;
 
-    @ManyToOne
-    @JoinColumn(name = "room_id")
-    private Number room;
+    private String hotelNumberName;
 
-    @ManyToOne
-    @JoinColumn(name = "tariff_id")
-    private Tariff tariff;
+    private String tariffName;
+
+    private String hotelName;
 
     @Enumerated(EnumType.STRING)
     private BookingStatus status;

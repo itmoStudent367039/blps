@@ -4,25 +4,32 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import ru.ifmo.monolith.domain.entity.Number;
 import ru.ifmo.monolith.domain.entity.Tariff;
 import ru.ifmo.monolith.domain.entity.TariffOption;
-import ru.ifmo.monolith.domain.repository.HotelRepository;
 import ru.ifmo.monolith.domain.repository.NumbersRepository;
+import ru.ifmo.monolith.domain.repository.TariffExcludeOptionRepository;
+import ru.ifmo.monolith.domain.repository.TariffIncludeOptionRepository;
+import ru.ifmo.monolith.domain.repository.TariffOptionRepository;
 import ru.ifmo.monolith.dto.GetAvailableNumbersRequest;
 import ru.ifmo.monolith.dto.NumberDto;
 import ru.ifmo.monolith.dto.TariffDto;
 import ru.ifmo.monolith.dto.TariffOptionDto;
+
+import java.util.List;
+import java.util.Optional;
 
 
 @Service
 @RequiredArgsConstructor
 public class NumbersService {
 
-    private final HotelRepository hotelRepository;
     private final NumbersRepository numbersRepository;
+    private final TariffsService tariffsService;
+    private final TariffExcludeOptionRepository tariffExcludeOptionRepository;
+    private final TariffIncludeOptionRepository tariffIncludeOptionRepository;
+    private final TariffOptionRepository tariffOptionRepository;
 
     public Page<NumberDto> findAllByHotelName(GetAvailableNumbersRequest request,
                                               PageRequest pageable) {
@@ -33,8 +40,12 @@ public class NumbersService {
         return new PageImpl<>(modelNumbers, pageable, entityNumbers.getTotalElements());
     }
 
+    public List<Number> findAllByHotelId(Integer hotelId) {
+        return numbersRepository.findAllByHotelId(hotelId);
+    }
+
     private NumberDto toModel(Number number) {
-        var tariffs = number.getTariffs()
+        var tariffs = tariffsService.findAllByNumberId(number.getId())
                 .stream()
                 .map(this::toModel)
                 .toList();
@@ -49,12 +60,18 @@ public class NumbersService {
     }
 
     private TariffDto toModel(Tariff tariff) {
-        var includeOptions = tariff.getIncludeOptions()
+        var includeOptions = tariffIncludeOptionRepository.findAllByTariffId(tariff.getId())
                 .stream()
+                .map(inOpt -> tariffOptionRepository.findById(inOpt.getTariffOptionId().getOptionId()))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .map(this::toModel)
                 .toList();
-        var excludeOptions = tariff.getExcludeOptions()
+        var excludeOptions = tariffExcludeOptionRepository.findAllByTariffId(tariff.getId())
                 .stream()
+                .map(inOpt -> tariffOptionRepository.findById(inOpt.getTariffOptionId().getOptionId()))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .map(this::toModel)
                 .toList();
         return TariffDto.builder()

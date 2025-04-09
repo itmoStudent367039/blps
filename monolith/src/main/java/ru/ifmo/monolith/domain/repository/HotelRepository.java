@@ -13,29 +13,36 @@ import ru.ifmo.monolith.dto.HotelDto;
 import java.util.List;
 
 @Repository
+// todo: jpa specification
 public interface HotelRepository extends JpaRepository<Hotel, Integer> {
 
-    @Query("SELECT new ru.ifmo.monolith.dto.HotelDto(c.name, h.name) " +
-            "FROM Hotel h " +
-            "JOIN h.city c " +
-            "WHERE h.name LIKE CONCAT('%', :name, '%') " +
-            "ORDER BY h.name DESC " +
-            "LIMIT 5")
+    @Query("""
+            SELECT new ru.ifmo.monolith.dto.HotelDto(c.name, h.name)
+            FROM Hotel h
+            JOIN City c ON c.id = h.cityId
+            WHERE h.name LIKE CONCAT('%', :name, '%')
+            ORDER BY h.name DESC
+            """)
     List<HotelDto> findAllByNameIsLike(@Param("name") String name);
 
     @Query("""
-                SELECT h FROM Hotel h
-                JOIN FETCH h.city c
-                JOIN FETCH h.numbers n
-                WHERE c.name = :#{#request.cityName}
+            SELECT h FROM Hotel h
+            JOIN City c ON c.id = h.cityId
+            WHERE c.name = :#{#request.cityName}
+              AND EXISTS (
+                SELECT 1 FROM Number n
+                WHERE n.hotelId = h.id
                   AND n.maxOccupancy >= :#{#request.guestsCount}
                   AND NOT EXISTS (
                     SELECT 1 FROM Booking b
-                    WHERE b.room = n
-                      AND (b.startDate < :#{#request.endBookingDate} AND b.endDate > :#{#request.startBookingDate})
+                    WHERE b.hotelName = h.name
+                      AND b.hotelNumberName = n.name
                       AND b.status IN ('PENDING', 'CONFIRMED')
+                      AND b.startDate < :#{#request.endBookingDate}
+                      AND b.endDate > :#{#request.startBookingDate}
                   )
-                ORDER BY h.name DESC
+              )
+            ORDER BY h.name DESC
             """)
     Page<Hotel> findAvailableHotels(@Param("request") GetHotelsRequest request, Pageable pageable);
 }
