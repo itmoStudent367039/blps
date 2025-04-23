@@ -10,7 +10,6 @@ import reactor.core.publisher.Mono;
 import ru.ifmo.apigateway.entity.User;
 import ru.ifmo.apigateway.repository.UserRepository;
 
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -21,12 +20,12 @@ public class CustomUserDetailsService implements ReactiveUserDetailsService {
 
     private final UserRepository userRepository;
 
-
     @Override
     public Mono<UserDetails> findByUsername(String username) {
-        Optional<UserDetails> userDetails = userRepository.findByLogin(username)
-                .map(this::toUserDetails);
-        return userDetails.map(Mono::just).orElseGet(Mono::empty);
+        return userRepository.findByLogin(username)
+                .map(this::toUserDetails)
+                .map(Mono::just)
+                .orElseGet(Mono::empty);
     }
 
     private UserDetails toUserDetails(User user) {

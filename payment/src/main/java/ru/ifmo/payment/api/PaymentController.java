@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.ifmo.common.dto.PaymentRequest;
-import ru.ifmo.common.dto.PaymentResponse;
+import ru.ifmo.common.dto.internal.PaymentRequest;
+import ru.ifmo.common.dto.internal.PaymentResponse;
 
 import static org.springframework.http.ResponseEntity.ok;
 
@@ -17,7 +17,8 @@ public class PaymentController {
     @PostMapping
     public ResponseEntity<PaymentResponse> getPaymentLink(@RequestBody PaymentRequest paymentRequest) {
         var paymentDto = PaymentResponse.builder()
-                .paymentLink("/stub/payment" + paymentRequest.getAmount())
+                .paymentLink("/stub/payment/" + paymentRequest.getAmount())
+                .bookingId(paymentRequest.getBookingId())
                 .build();
         return ok(paymentDto);
     }

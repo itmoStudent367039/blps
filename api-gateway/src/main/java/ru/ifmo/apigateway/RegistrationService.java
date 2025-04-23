@@ -16,7 +16,6 @@ import ru.ifmo.apigateway.repository.UserRepository;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.ResponseEntity.status;
-import static ru.ifmo.apigateway.config.RoleConstant.ROLE_USER;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +30,7 @@ public class RegistrationService {
         if (userRepository.findByLogin(request.login()).isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new RegistrationResponse("User already exists"));
         }
-        Role userRole = roleRepository.findByName(ROLE_USER)
+        Role userRole = roleRepository.findByName("ROLE_USER")
                 .orElseThrow(() -> new RuntimeException("Default role not found"));
         User user = buildEntity(request, userRole);
         userRepository.save(user);

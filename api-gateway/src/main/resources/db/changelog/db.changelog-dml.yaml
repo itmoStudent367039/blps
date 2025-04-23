@@ -20,7 +20,7 @@ databaseChangeLog:
                   name: name
                   value: 'ROLE_USER'
   - changeSet:
-      id: 1-dml-roles-user
+      id: 1-dml-roles-server
       author: yestai
       changes:
         - insert:

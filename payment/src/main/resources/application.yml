@@ -1,13 +1,14 @@
 spring:
   rabbitmq:
-    host: ${SPRING_RABBITMQ_HOST}
-    port: ${SPRING_RABBITMQ_PORT}
-    username: guest
-    password: guest
+    host: ${SPRING_RABBITMQ_HOST:localhost}
+    port: ${SPRING_RABBITMQ_PORT:5672}
+    username: ${RABBIT_USERNAME:guest}
+    password: ${RABBIT_PASSWORD:guest}
   application:
     name: payment
+
 server:
-  port: 8081
+  port: ${PAYMENT_PORT:8081}
   servlet:
     context-path: /payment
 
@@ -15,3 +16,5 @@ rabbitmq:
   exchange: payment-exchange
   successRoutingKey: payment.success
   failureRoutingKey: payment.failure
+
+api-gateway: ${API-GATEWAY:http://localhost:8082}

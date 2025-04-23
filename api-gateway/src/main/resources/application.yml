@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5431/db}
-    username: ${SPRING_DATASOURCE_USERNAME:user}
-    password: ${SPRING_DATASOURCE_PASSWORD:user}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5429/mydatabase}
+    username: ${SPRING_DATASOURCE_USERNAME:myuser}
+    password: ${SPRING_DATASOURCE_PASSWORD:secret}
     driver-class-name: org.postgresql.Driver
     hikari:
       pool-name: HikariCP
@@ -13,12 +13,20 @@ spring:
     gateway:
       routes:
         - id: monolith
-          uri: http://localhost:8080
+          uri: ${MONOLITH:http://localhost:8080}
           predicates:
             - Path=/monolith/api/**
+        - id: hotels
+          uri: ${HOTELS:http://localhost:8085}
+          predicates:
+            - Path=/hotels/api/**
         - id: payment
-          uri: http://localhost:8081
+          uri: ${HOTELS:http://localhost:8081}
           predicates:
             - Path=/payment/api/**
 server:
-  port: 8082
+  port: ${API_GATEWAY_PORT:8082}
+
+server-user:
+  credential: ${SERVER_USER_PASS:pass}
+  name: ${SERVER_USER_NAME:name}

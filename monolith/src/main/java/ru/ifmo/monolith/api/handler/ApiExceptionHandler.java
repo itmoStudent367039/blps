@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.ifmo.monolith.dto.ErrorResponse;
+import ru.ifmo.common.dto.ErrorResponse;
 import ru.ifmo.monolith.exception.MonolithException;
 
 @Slf4j

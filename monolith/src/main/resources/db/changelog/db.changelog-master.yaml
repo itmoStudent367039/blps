@@ -1,233 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 2
-      author: yestai
-      changes:
-        - createTable:
-            tableName: city
-            columns:
-              - column:
-                  name: id
-                  type: int
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: name
-                  type: varchar(255)
-                  constraints:
-                    nullable: false
-                    unique: true
-  - changeSet:
-      id: 3
-      author: yestai
-      changes:
-        - createTable:
-            tableName: hotel
-            columns:
-              - column:
-                  name: id
-                  type: int
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: city_id
-                  type: int
-                  constraints:
-                    nullable: false
-              - column:
-                  name: name
-                  type: varchar(255)
-                  constraints:
-                    unique: true
-                    nullable: false
-              - column:
-                  name: rating
-                  type: int
-              - column:
-                  name: distance_from_center
-                  type: double
-        - addForeignKeyConstraint:
-            baseTableName: hotel
-            baseColumnNames: city_id
-            referencedTableName: city
-            referencedColumnNames: id
-            constraintName: fk_hotel_city
-  - changeSet:
-      id: 4
-      author: yestai
-      changes:
-        - createTable:
-            tableName: number
-            columns:
-              - column:
-                  name: id
-                  type: int
-                  constraints:
-                    primaryKey: true
-              - column:
-                  name: name
-                  type: varchar(255)
-                  constraints:
-                    nullable: false
-                    unique: true
-              - column:
-                  name: hotel_id
-                  type: int
-                  constraints:
-                    nullable: false
-              - column:
-                  name: max_occupancy
-                  type: int
-                  constraints:
-                    nullable: false
-              - column:
-                  name: number_of_rooms
-                  type: int
-                  constraints:
-                    nullable: false
-              - column:
-                  name: number_of_single_beds
-                  type: int
-                  constraints:
-                    nullable: false
-              - column:
-                  name: number_of_pair_beds
-                  type: int
-                  constraints:
-                    nullable: false
-        - addForeignKeyConstraint:
-            baseTableName: number
-            baseColumnNames: hotel_id
-            referencedTableName: hotel
-            referencedColumnNames: id
-            constraintName: fk_number_hotel
-
-  - changeSet:
-      id: 5
-      author: yestai
-      changes:
-        - createTable:
-            tableName: tariff
-            columns:
-              - column:
-                  name: id
-                  type: bigint
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: tariff_name
-                  type: varchar(255)
-                  constraints:
-                    nullable: false
-                    unique: true
-              - column:
-                  name: price
-                  type: decimal(10, 2)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: number_id
-                  type: bigint
-                  constraints:
-                    nullable: false
-        - addForeignKeyConstraint:
-            baseTableName: tariff
-            baseColumnNames: number_id
-            referencedTableName: number
-            referencedColumnNames: id
-            constraintName: fk_tariff_number
-
-  - changeSet:
-      id: 6
-      author: yestai
-      changes:
-        - createTable:
-            tableName: tariff_option
-            columns:
-              - column:
-                  name: id
-                  type: bigint
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: option_name
-                  type: varchar(255)
-                  constraints:
-                    nullable: false
-
-  - changeSet:
-      id: 8
-      author: yestai
-      changes:
-        - createTable:
-            tableName: tariff_include_option
-            columns:
-              - column:
-                  name: tariff_id
-                  type: bigint
-                  constraints:
-                    nullable: false
-              - column:
-                  name: option_id
-                  type: bigint
-                  constraints:
-                    nullable: false
-        - addPrimaryKey:
-            tableName: tariff_include_option
-            columnNames: tariff_id, option_id
-            constraintName: pk_tariff_include_option
-        - addForeignKeyConstraint:
-            baseTableName: tariff_include_option
-            baseColumnNames: tariff_id
-            referencedTableName: tariff
-            referencedColumnNames: id
-            constraintName: fk_tariff_include_option_tariff
-        - addForeignKeyConstraint:
-            baseTableName: tariff_include_option
-            baseColumnNames: option_id
-            referencedTableName: tariff_option
-            referencedColumnNames: id
-            constraintName: fk_tariff_include_option_option
-  - changeSet:
-      id: 9
-      author: yestai
-      changes:
-        - createTable:
-            tableName: tariff_exclude_option
-            columns:
-              - column:
-                  name: tariff_id
-                  type: bigint
-                  constraints:
-                    nullable: false
-              - column:
-                  name: option_id
-                  type: bigint
-                  constraints:
-                    nullable: false
-        - addPrimaryKey:
-            tableName: tariff_exclude_option
-            columnNames: tariff_id, option_id
-            constraintName: pk_tariff_exclude_option
-        - addForeignKeyConstraint:
-            baseTableName: tariff_exclude_option
-            baseColumnNames: tariff_id
-            referencedTableName: tariff
-            referencedColumnNames: id
-            constraintName: fk_tariff_exclude_option_tariff
-        - addForeignKeyConstraint:
-            baseTableName: tariff_exclude_option
-            baseColumnNames: option_id
-            referencedTableName: tariff_option
-            referencedColumnNames: id
-            constraintName: fk_tariff_exclude_option_option
-
-  - changeSet:
-      id: 10
+      id: 1
       author: yestai
       changes:
         - createTable:
@@ -270,13 +43,18 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: room_id
-                  type: int
+                  name: hotel_number_name
+                  type: varchar(255)
                   constraints:
                     nullable: false
               - column:
-                  name: tariff_id
-                  type: bigint
+                  name: tariff_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: hotel_name
+                  type: varchar(255)
                   constraints:
                     nullable: false
               - column:
@@ -284,18 +62,8 @@ databaseChangeLog:
                   type: varchar(255)
                   constraints:
                     nullable: false
-        - addForeignKeyConstraint:
-            baseTableName: bookings
-            baseColumnNames: room_id
-            referencedTableName: number
-            referencedColumnNames: id
-            constraintName: fk_booking_room
-        - addForeignKeyConstraint:
-            baseTableName: bookings
-            baseColumnNames: tariff_id
-            referencedTableName: tariff
-            referencedColumnNames: id
-            constraintName: fk_booking_tariff
-
-  - include:
-      file: db/changelog/db.changelog-dml.yaml
+              - column:
+                  name: username
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
