@@ -1,0 +1,59 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: yestai
+      changes:
+        - createTable:
+            tableName: role
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+
+  - changeSet:
+      id: 2
+      author: yestai
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: role_id
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: login
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: password
+                  type: varchar(512)
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: users
+            baseColumnNames: role_id
+            referencedTableName: role
+            referencedColumnNames: id
+            constraintName: fk_role_oid
+
+  - include:
+      file: db/changelog/db.changelog-dml.yaml

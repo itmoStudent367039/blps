@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: mail-sender
+
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    client-id: ${KAFKA_CLIENT_ID:demo-producer}
+
+  mail:
+    host: ${EMAIL_SENDER_HOST:smtp.gmail.com}
+    port: ${EMAIL_SENDER_PORT:587}
+    username: ${EMAIL_SENDER_ID:igor.abdullin.2004@gmail.com}
+    password: ${EMAIL_SENDER_PASSWORD:fobfllhkdwazxkon}
+    default-encoding: UTF-8
+    properties:
+      mail:
+        mime:
+          charset: UTF
+        smtp:
+          writetimeout: 10000
+          connectiontimeout: 10000
+          timeout: 10000
+          auth: true
+          starttls:
+            enable: true
+            required: true
+
+application:
+  kafka:
+    topic-name: ${KAFKA_TOPIC_NAME:topicName}
+
+server:
+  port: ${SERVER_PORT:1337}

@@ -1,0 +1,52 @@
+spring:
+  kafka:
+    bootstrap-servers: ${KAFKA_URL:localhost:9092}
+  liquibase:
+    enabled: false
+  rabbitmq:
+    host: ${SPRING_RABBITMQ_HOST:localhost}
+    port: ${SPRING_RABBITMQ_PORT:5672}
+    username: ${RABBIT_USERNAME:guest}
+    password: ${RABBIT_PASSWORD:guest}
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5435/mydatabase}
+    username: ${SPRING_DATASOURCE_USERNAME:myuser}
+    password: ${SPRING_DATASOURCE_PASSWORD:secret}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      pool-name: HikariCP
+      maximum-pool-size: 10
+server:
+  port: ${MONOLITH_PORT:8080}
+  servlet:
+    context-path: /monolith
+
+hotels-datasource:
+  url: ${HOTELS_DATASOURCE_URL:jdbc:postgresql://localhost:5430/mydatabase}
+  username: ${HOTELS_DATASOURCE_USERNAME:myuser}
+  password: ${HOTELS_DATASOURCE_PASSWORD:secret}
+  driver-class-name: org.postgresql.Driver
+
+rabbitmq:
+  exchange: payment-exchange
+  successRoutingKey: payment.success
+  failureRoutingKey: payment.failure
+  successQueue: payment-success-queue
+  failureQueue: payment-failure-queue
+
+application:
+  topic-name: ${KAFKA_TOPIC_NAME:topicName}
+
+payment:
+  url: ${PAYMENT:http://localhost:8082/payment/api}
+  username: ${PAYMENT_USERNAME:name}
+  credential: ${PAYMENT_CREDENTIAL:pass}
+
+tariffs:
+  exists:
+    url: ${TARIFFS_EXISTS:http://localhost:8082/hotels/api/tariffs/exists}
+  price:
+    url: ${TARIFFS_PRICE:http://localhost:8082/hotels/api/tariffs/price}
+
+api-gateway: ${API-GATEWAY:http://localhost:8082}
+

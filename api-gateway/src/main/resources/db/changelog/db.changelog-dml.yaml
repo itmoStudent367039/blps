@@ -1,0 +1,31 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1-dml-roles-admin
+      author: yestai
+      changes:
+        - insert:
+            tableName: role
+            columns:
+              - column:
+                  name: name
+                  value: 'ROLE_ADMIN'
+  - changeSet:
+      id: 1-dml-roles-user
+      author: yestai
+      changes:
+        - insert:
+            tableName: role
+            columns:
+              - column:
+                  name: name
+                  value: 'ROLE_USER'
+  - changeSet:
+      id: 1-dml-roles-server
+      author: yestai
+      changes:
+        - insert:
+            tableName: role
+            columns:
+              - column:
+                  name: name
+                  value: 'ROLE_SERVER'

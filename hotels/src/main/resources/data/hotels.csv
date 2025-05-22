@@ -1,0 +1,6 @@
+id,name,city_id,rating,distance_from_center
+1,Hotel Moscow,1,5,5.2
+2,Grand Petersburg,2,4,2.3
+3,Samara Palace,3,4,2
+4,Samara Palace2,3,10,1
+5,Grand Samara again,3,10,0.8
