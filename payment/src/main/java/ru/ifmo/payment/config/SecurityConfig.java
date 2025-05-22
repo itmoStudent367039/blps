@@ -1,4 +1,4 @@
-package ru.ifmo.payment.security;
+package ru.ifmo.payment.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

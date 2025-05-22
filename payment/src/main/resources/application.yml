@@ -18,3 +18,11 @@ rabbitmq:
   failureRoutingKey: payment.failure
 
 api-gateway: ${API-GATEWAY:http://localhost:8082}
+
+yookassa:
+  auth:
+    account-id: ${YOOKASSA_ACCOUNT_ID}
+    key: ${YOOKASSA_ACCOUNT_KEY}
+  webhook-url: ${YOOKASSA_WK}
+  redirect-url: https://google.com
+  payment-description: Booking a number

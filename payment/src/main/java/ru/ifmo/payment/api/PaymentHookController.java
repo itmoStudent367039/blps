@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.ifmo.payment.dto.PaymentHookDto;
 import ru.ifmo.payment.service.PaymentHookService;
 
+import static org.springframework.http.ResponseEntity.internalServerError;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
@@ -20,7 +21,9 @@ public class PaymentHookController {
 
     @PostMapping
     public ResponseEntity<Void> hookFromPayment(@RequestBody PaymentHookDto paymentDto) {
-        paymentHookService.handleHook(paymentDto);
-        return ok().build();
+        if (paymentHookService.handleHook(paymentDto)) {
+            return ok().build();
+        }
+        return internalServerError().build();
     }
 }

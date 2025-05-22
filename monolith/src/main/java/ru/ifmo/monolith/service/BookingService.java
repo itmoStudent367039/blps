@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.ifmo.common.dto.booking.BookingModel;
 import ru.ifmo.common.dto.booking.BookingRequestDto;
 import ru.ifmo.common.dto.booking.BookingResponseDto;
 import ru.ifmo.common.dto.internal.PaymentRequest;
@@ -61,6 +62,28 @@ public class BookingService {
                         "Can't set status for id: " + bookingId + "; the selected booking: " + status,
                         CONFLICT));
         booking.setStatus(status);
+    }
+
+    public BookingModel getById(Integer bookingId) {
+        return bookingRepository.findById(bookingId)
+                .map(this::toModel)
+                .orElseThrow(() -> new MonolithException("Booking not found by id: " + bookingId, NOT_FOUND));
+    }
+
+    private BookingModel toModel(Booking booking) {
+        return BookingModel.builder()
+                .startDate(booking.getStartDate())
+                .endDate(booking.getEndDate())
+                .guestsNumber(booking.getGuestsNumber())
+                .firstName(booking.getFirstName())
+                .lastName(booking.getLastName())
+                .tariffName(booking.getTariffName())
+                .email(booking.getEmail())
+                .hotelNumberName(booking.getHotelNumberName())
+                .tariffName(booking.getTariffName())
+                .hotelName(booking.getHotelName())
+                .isPayed(true)
+                .build();
     }
 
     public BookingStatus getStatus(Integer bookingId, UserDetails user) {

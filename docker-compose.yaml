@@ -56,6 +56,7 @@ services:
       - booking_db
       - rabbitmq
       - payment
+      - broker
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://${BOOKING_DB_HOST}:${BOOKING_DB_PORT}/${POSTGRES_DB}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
@@ -71,6 +72,8 @@ services:
       RABBIT_USERNAME: ${RABBITMQ_DEFAULT_USER}
       RABBIT_PASSWORD: ${RABBITMQ_DEFAULT_PASS}
       MONOLITH_PORT: ${MONOLITH_PORT}
+      KAFKA_TOPIC_NAME: ${KAFKA_TOPIC_NAME}
+      KAFKA_URL: ${KAFKA_URL}
     ports:
       - "${MONOLITH_PORT}:${MONOLITH_PORT}"
     networks:
@@ -124,8 +127,61 @@ services:
       PAYMENT_PORT: ${PAYMENT_PORT}
       RABBIT_USERNAME: ${RABBITMQ_DEFAULT_USER}
       RABBIT_PASSWORD: ${RABBITMQ_DEFAULT_PASS}
+      YOOKASSA_ACCOUNT_ID: ${YOOKASSA_ACCOUNT_ID}
+      YOOKASSA_ACCOUNT_KEY: ${YOOKASSA_ACCOUNT_KEY}
+      YOOKASSA_WK: ${YOOKASSA_WK}
     ports:
       - "${PAYMENT_PORT}:${PAYMENT_PORT}"
+    networks:
+      - app-network
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:6.2.0
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - '22181:2181'
+    networks:
+      - app-network
+
+  broker:
+    image: confluentinc/cp-kafka:latest
+    container_name: broker
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+    networks:
+      - app-network
+
+  mail-sender:
+    build: ./mail-sender
+    ports:
+      - "1337:1337"
+    environment:
+      - 'SERVER_PORT=1337'
+      - 'EMAIL_SENDER_HOST=smtp.gmail.com'
+      - 'EMAIL_SENDER_PORT=587'
+      - 'EMAIL_SENDER_ID=igor.abdullin.2004@gmail.com'
+      - 'EMAIL_SENDER_PASSWORD=fobfllhkdwazxkon'
+      - 'KAFKA_BOOTSTRAP_SERVERS=broker:9092'
+      - 'KAFKA_CLIENT_ID=demo-producer'
+      - 'KAFKA_TOPIC_NAME=topicName'
+    command: java -jar app.jar
+    depends_on:
+      - broker
     networks:
       - app-network
 

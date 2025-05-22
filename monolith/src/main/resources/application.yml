@@ -1,4 +1,6 @@
 spring:
+  kafka:
+    bootstrap-servers: ${KAFKA_URL:localhost:9092}
   liquibase:
     enabled: false
   rabbitmq:
@@ -31,6 +33,9 @@ rabbitmq:
   failureRoutingKey: payment.failure
   successQueue: payment-success-queue
   failureQueue: payment-failure-queue
+
+application:
+  topic-name: ${KAFKA_TOPIC_NAME:topicName}
 
 payment:
   url: ${PAYMENT:http://localhost:8082/payment/api}

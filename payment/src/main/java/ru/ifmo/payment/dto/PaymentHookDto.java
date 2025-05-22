@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class PaymentHookDto {
 
-    private Boolean success;
-    private Integer bookingId;
+    private String type;
+    private String event;
+    private Object object;
 }
